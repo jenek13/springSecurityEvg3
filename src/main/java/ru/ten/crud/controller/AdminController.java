@@ -1,6 +1,7 @@
 package ru.ten.crud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -121,7 +122,13 @@ public class AdminController {
 
     @RequestMapping(value = {"/user"}, method = RequestMethod.GET)
     public ModelAndView userPage() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+
+        //User loggedInUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+        String username = user.getName();
+
         ModelAndView model = new ModelAndView("user");
         model.addObject("user", user);
         return model;
