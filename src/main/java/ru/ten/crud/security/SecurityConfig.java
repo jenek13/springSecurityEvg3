@@ -8,18 +8,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.ten.crud.security.handlers.CustomAuthenticationFailureHandler;
 import ru.ten.crud.security.handlers.CustomAuthenticationSuccessHandler;
 import ru.ten.crud.security.service.UserDetailsServiceImpl;
-import ru.ten.crud.service.UserService;
 
 @Configuration
 @ComponentScan(basePackages = "ru.ten.crud.security")
@@ -69,42 +65,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .failureHandler(customAuthenticationFailureHandler)
                     .usernameParameter("login")
                     .passwordParameter("password");
-                    //.and().exceptionHandling().accessDeniedPage("/error");
+            //.and().exceptionHandling().accessDeniedPage("/error");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
-    }
-
-    /*@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) {
-        //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        //User.withUsername("admin").password("{noop}admin").roles("ADMIN").build();
-        //The name of the configureGlobal method is not important. However,
-        // it is important to only configure AuthenticationManagerBuilder in a class annotated with either @EnableWebSecurity
-        try {
-            auth.
-                    userDetailsService(authenticationService).passwordEncoder(passwordEncoder);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("{noop}user").roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password("{noop}admin").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("ad").password("{noop}ad").roles("ADMIN");
     }
-
-
 
     @Bean
     public PasswordEncoder encoder() {
@@ -122,7 +94,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-
+    /*@Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
+        //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        //User.withUsername("admin").password("{noop}admin").roles("ADMIN").build();
+        //The name of the configureGlobal method is not important. However,
+        // it is important to only configure AuthenticationManagerBuilder in a class annotated with either @EnableWebSecurity
+        try {
+            auth.
+                    userDetailsService(authenticationService).passwordEncoder(passwordEncoder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 
 }
-

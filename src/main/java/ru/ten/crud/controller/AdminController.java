@@ -1,8 +1,10 @@
 package ru.ten.crud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,7 +24,6 @@ import java.util.Set;
 public class AdminController {
 
     private final RoleService roleService;
-
     private final UserService userService;
 
     @Autowired
@@ -54,11 +55,6 @@ public class AdminController {
         return model;
     }
 
-
-
-
-
-
     @RequestMapping(value = {"/admin/addUser"}, method = RequestMethod.GET)
     public ModelAndView addUser() {
         ModelAndView model = new ModelAndView("addUser");
@@ -76,12 +72,11 @@ public class AdminController {
             CodeMessenger.setCode(spring.app.utils.ErrorCode.ADD);
             return "redirect:/admin/addUser";
         }
-
-        User user = new User(login, password, true);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        User user = new User(login, encodedPassword, true);
         user.setRoles(getRoles(role));
-
         userService.insertUser(user);
-
         return "redirect:/admin";
     }
 
@@ -122,13 +117,9 @@ public class AdminController {
 
     @RequestMapping(value = {"/user"}, method = RequestMethod.GET)
     public ModelAndView userPage() {
-
-
         //User loggedInUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         Authentication user = SecurityContextHolder.getContext().getAuthentication();
         String username = user.getName();
-
         ModelAndView model = new ModelAndView("user");
         model.addObject("user", user);
         return model;
