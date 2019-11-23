@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             e.printStackTrace();
         }
         try {
+            //hgh
             http.authorizeRequests()
                     //позволяет зарестирктить достур
                     .antMatchers("/user/**")
