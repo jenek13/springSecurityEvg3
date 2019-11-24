@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserDaoHibernateImpl implements UserDAO {
+public class UserDaoImpl implements UserDAO {
 
-    public UserDaoHibernateImpl() {
+    public UserDaoImpl() {
     }
 
     @PersistenceContext

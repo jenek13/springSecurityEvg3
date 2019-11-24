@@ -1,6 +1,7 @@
 package ru.ten.crud.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ten.crud.dao.UserDAO;
 import ru.ten.crud.model.User;
@@ -42,7 +43,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insertUser(User user) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userDAO.addUser(user);
+
+        //String encodedPassword = bCryptPasswordEncoder.encode(password);
     }
 
     @Override

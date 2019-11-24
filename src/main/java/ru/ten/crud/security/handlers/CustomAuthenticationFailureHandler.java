@@ -5,8 +5,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Service;
-import ru.ten.crud.utils.CodeMessenger;
-import spring.app.utils.ErrorCode;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +19,6 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 										AuthenticationException exception) throws IOException, ServletException {
 		String targetUrl = determineTargetUrl();
-		CodeMessenger.setCode(ErrorCode.LOGIN);
 		redirectStrategy.sendRedirect(request, response, targetUrl);
 	}
 

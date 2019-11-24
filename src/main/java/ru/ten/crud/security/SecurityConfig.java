@@ -21,6 +21,8 @@ import ru.ten.crud.security.service.UserDetailsServiceImpl;
 @ComponentScan(basePackages = "ru.ten.crud.security")
 @EnableWebSecurity
 
+
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl authenticationService;//чекает юзера в бд по его логину есть или нет
@@ -50,21 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //hgh
             http.authorizeRequests()
                     //позволяет зарестирктить достур
-                    .antMatchers("/user/**")
-                    .hasAnyAuthority("ROLE_USER")
+                    .antMatchers("/user/**")//указываю для какого юрла хочу настроить доступ
+                    .hasAnyAuthority("ROLE_USER")//юзер с ролью юзер может войти на юрл выше
                     .antMatchers("/admin/**")
                     //.permitALL чтоб отключать секьюрити
                     .hasAnyAuthority("ROLE_ADMIN")
                     .and()
-                    .formLogin()
-                    //указываем страницу с формой логина
-                    .loginPage("/login")
-                    //имя джспи страницы куда направить
+                    .formLogin()//указываем страницу с формой логина
+                    .loginPage("/login")//имя джспи страницы куда направить
                     .loginProcessingUrl("/processing-url")
                     //  // указываем action с формы логина/login-processing-url — задает значение action у form при котором Spring Security понимает, что нужно проверять пользователя согласно настройкам.
                     .successHandler(customAuthenticationSuccessHandler)//вот это не тригеритс после того как loadUserByUsername отработал
                     .failureHandler(customAuthenticationFailureHandler)
-                    .usernameParameter("login")
+                    .usernameParameter("login")//принимает логин введенный в форму
                     .passwordParameter("password");
             //.and().exceptionHandling().accessDeniedPage("/error");
         } catch (Exception e) {
@@ -72,12 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @Autowired
+    /*@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("{noop}user").roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password("{noop}admin").roles("ADMIN");
         auth.inMemoryAuthentication().withUser("ad").password("{noop}ad").roles("ADMIN");
-    }
+    }*/
 
     @Bean
     public PasswordEncoder encoder() {
@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
-    /*@Autowired
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         //User.withUsername("admin").password("{noop}admin").roles("ADMIN").build();
@@ -103,10 +103,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // it is important to only configure AuthenticationManagerBuilder in a class annotated with either @EnableWebSecurity
         try {
             auth.
-                    userDetailsService(authenticationService).passwordEncoder(passwordEncoder);
+                    userDetailsService(authenticationService).passwordEncoder(encoder());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 }
