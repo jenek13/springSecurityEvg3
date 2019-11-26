@@ -56,16 +56,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .hasAnyAuthority("ROLE_USER")//юзер с ролью юзер может войти на юрл выше
                     .antMatchers("/admin/**")
                     //.permitALL чтоб отключать секьюрити
-                    .hasAnyAuthority("ROLE_ADMIN")
-                    .and()
-                    .formLogin()//указываем страницу с формой логина
-                    .loginPage("/login")//имя джспи страницы куда направить
-                    .loginProcessingUrl("/processing-url")
-                    //  // указываем action с формы логина/login-processing-url — задает значение action у form при котором Spring Security понимает, что нужно проверять пользователя согласно настройкам.
-                    .successHandler(customAuthenticationSuccessHandler)//вот это не тригеритс после того как loadUserByUsername отработал
-                    .failureHandler(customAuthenticationFailureHandler)
-                    .usernameParameter("login")//принимает логин введенный в форму
-                    .passwordParameter("password");
+                    .hasAnyAuthority("ROLE_ADMIN");
+                    //.and()
+                    //.formLogin()//регистрируем страницу с формой логина
+                    //.loginPage("/login")//имя джспи страницы куда направить по дефолту при запуске
+                    //.loginProcessingUrl("/processing-url")//сабмитит наши креденшиалы
+
+                    //указываем action с формы логина/login-processing-url — задает значение action у form при котором Spring Security понимает,
+                    // что нужно проверять пользователя согласно настройкам.
+                    //сообщает Spring Security обрабатывать предоставленные учетные данные при отправке указанного пути
+                    // и, по умолчанию, перенаправляет пользователя обратно пользователю страницы
+                    //.successHandler(customAuthenticationSuccessHandler)//вот это не тригеритс после того как loadUserByUsername отработал
+                    //.failureHandler(customAuthenticationFailureHandler)
+                    //.usernameParameter("login")//принимает логин введенный в форму
+                    //.passwordParameter("password");
             //.and().exceptionHandling().accessDeniedPage("/error");
         } catch (Exception e) {
             e.printStackTrace();
